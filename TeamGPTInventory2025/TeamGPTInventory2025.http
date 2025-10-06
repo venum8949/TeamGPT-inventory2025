@@ -1,0 +1,6 @@
+@TeamGPTInventory2025_HostAddress = http://localhost:5220
+
+GET {{TeamGPTInventory2025_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

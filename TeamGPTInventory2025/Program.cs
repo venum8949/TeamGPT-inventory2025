@@ -24,6 +24,10 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<SchoolInventory>();
+        // Apply any pending migrations at startup
+        context.Database.Migrate();
+
+        // Existing seeding
         DbInit.Initialize(context);
     }
     catch (Exception ex)
@@ -32,7 +36,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred creating the DB.");
     }
 }
-
 
 // Configure the HTTP request pipeline.
 

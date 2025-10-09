@@ -31,7 +31,7 @@ namespace TeamGPTInventory2025.Controllers
                     Status = r.Status.ToString(),
                     Notes = r.Notes
                 })
-                .ToListAsync();
+                .ToListAsync(); //Нова логика 
 
             return Ok(report);
         }

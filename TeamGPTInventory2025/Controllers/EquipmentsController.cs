@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace TeamGPTInventory2025.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")] // Authenticated users can read; Admin role enforced on modifying endpoints
     public class EquipmentsController : ControllerBase
     {
         private readonly SchoolInventory _context;
@@ -42,8 +44,9 @@ namespace TeamGPTInventory2025.Controllers
         }
 
         // PUT: api/Equipments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Only Admins may modify
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutEquipment(int id, Equipment equipment)
         {
             if (id != equipment.EquipmentId)
@@ -73,8 +76,9 @@ namespace TeamGPTInventory2025.Controllers
         }
 
         // POST: api/Equipments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Only Admins may create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Equipment>> PostEquipment(Equipment equipment)
         {
             _context.Equipments.Add(equipment);
@@ -85,6 +89,7 @@ namespace TeamGPTInventory2025.Controllers
 
         // DELETE: api/Equipments/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             var equipment = await _context.Equipments.FindAsync(id);

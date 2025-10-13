@@ -27,10 +27,9 @@ namespace TeamGPTInventory2025.Data
             }
             context.SaveChanges();
 
-            /*
             var requests = new Request[]
 {
-     new Request
+    new Request
     {
         EquipmentId = 1,
         RequestedBy = "student1",
@@ -74,9 +73,9 @@ namespace TeamGPTInventory2025.Data
                 context.Requests.Add(r); // ❗ Увери се, че DbSet е наречен Requests
             }
             context.SaveChanges();
-            */
+
 
 
         }
     }
-    }
+}

@@ -31,7 +31,7 @@ namespace TeamGPTInventory2025.Controllers
             // Генерираме агрегирания отчет
             var report = equipments.Select(e =>
             {
-                var equipmentRequests = requests.Where(r => r.EquipmentId == e.Id).ToList();
+                var equipmentRequests = requests.Where(r => r.EquipmentId == e.EquipmentId).ToList();
 
                 var inUse = equipmentRequests.Count(r =>
                     r.Status == RequestStatus.Approved &&
@@ -43,12 +43,12 @@ namespace TeamGPTInventory2025.Controllers
                 var returned = equipmentRequests.Count(r =>
                     r.ReturnedAt != null);
 
-                var available = Convert.ToInt32(e.Quantity) - inUse;
+                var available = equipmentRequests.Count - inUse;
 
                 return new
                 {
                     EquipmentName = e.Name,
-                    TotalQuantity = e.Quantity,
+                    TotalQuantity = equipmentRequests.Count,
                     InUse = inUse,
                     Pending = pending,
                     Returned = returned,

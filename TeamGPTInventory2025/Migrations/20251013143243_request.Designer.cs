@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamGPTInventory2025.Models;
 
@@ -10,9 +11,11 @@ using TeamGPTInventory2025.Models;
 namespace TeamGPTInventory2025.Migrations
 {
     [DbContext(typeof(SchoolInventory))]
-    partial class SchoolInventoryModelSnapshot : ModelSnapshot
+    [Migration("20251013143243_request")]
+    partial class request
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");

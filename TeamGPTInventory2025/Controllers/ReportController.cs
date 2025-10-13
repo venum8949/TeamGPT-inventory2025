@@ -15,23 +15,46 @@ namespace TeamGPTInventory2025.Controllers
             _context = context;
         }
 
-        // 📈 Usage Report – всички заявки с оборудване
+        // 📈 Usage Report – агрегирана статистика за оборудването
         [HttpGet("usage")]
-        public async Task<ActionResult<IEnumerable<Report>>> GetUsageReport()
+        public async Task<ActionResult<IEnumerable<object>>> GetUsageReport()
         {
-            var report = await _context.Requests
-                .Include(r => r.Equipment)
-                .Select(r => new Report
+            // Зареждаме всички заявки и оборудване предварително
+            var requests = await _context.Requests
+                .AsNoTracking()
+                .ToListAsync();
+
+            var equipments = await _context.Equipments
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Генерираме агрегирания отчет
+            var report = equipments.Select(e =>
+            {
+                var equipmentRequests = requests.Where(r => r.EquipmentId == e.Id).ToList();
+
+                var inUse = equipmentRequests.Count(r =>
+                    r.Status == RequestStatus.Approved &&
+                    r.ReturnedAt == null);
+
+                var pending = equipmentRequests.Count(r =>
+                    r.Status == RequestStatus.Pending);
+
+                var returned = equipmentRequests.Count(r =>
+                    r.ReturnedAt != null);
+
+                var available = Convert.ToInt32(e.Quantity) - inUse;
+
+                return new
                 {
-                    EquipmentName = r.Equipment.Name,
-                    RequestedBy = r.RequestedBy,
-                    RequestedAt = r.RequestedAt,
-                    ApprovedAt = r.ApprovedAt,
-                    ReturnedAt = r.ReturnedAt,
-                    Status = r.Status.ToString(),
-                    Notes = r.Notes
-                })
-                .ToListAsync(); //Нова логика 
+                    EquipmentName = e.Name,
+                    TotalQuantity = e.Quantity,
+                    InUse = inUse,
+                    Pending = pending,
+                    Returned = returned,
+                    Available = available < 0 ? 0 : available
+                };
+            }).ToList();
 
             return Ok(report);
         }

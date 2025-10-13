@@ -8,6 +8,8 @@ namespace TeamGPTInventory2025.Models
 {
     public class Equipment
     {
+        internal object Quantity;
+
         public int EquipmentId { get; set; }
 
         [Required]
@@ -27,9 +29,10 @@ namespace TeamGPTInventory2025.Models
         public string Location { get; set; }
 
         public string PhotoUrl { get; set; }
+        public int Id { get; internal set; }
 
         // Navigation property
-       // public ICollection<Request> Requests { get; set; }
+        // public ICollection<Request> Requests { get; set; }
     }
 
     // --- ENUM DEFINITIONS BELOW ---

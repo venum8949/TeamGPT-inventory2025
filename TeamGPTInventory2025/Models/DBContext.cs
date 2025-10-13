@@ -15,8 +15,6 @@ namespace TeamGPTInventory2025.Models
             modelBuilder.Entity<Equipment>().ToTable("Equipments");
             modelBuilder.Entity<Request>().ToTable("Requests");
 
-            // ✅ Маркирай Report като keyless модел
-            modelBuilder.Entity<Report>().HasNoKey();
         }
 
     }

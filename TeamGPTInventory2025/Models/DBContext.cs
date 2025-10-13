@@ -9,10 +9,14 @@ namespace TeamGPTInventory2025.Models
         }
 
         public DbSet<Equipment> Equipments { get; set; }
+        public DbSet<Request> Requests { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Equipment>().ToTable("Equipment");
-            
+            modelBuilder.Entity<Request>().ToTable("Request");
+
         }
+
     }
 }
+

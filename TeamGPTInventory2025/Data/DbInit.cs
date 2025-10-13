@@ -26,6 +26,56 @@ namespace TeamGPTInventory2025.Data
                 context.Equipments.Add(s);
             }
             context.SaveChanges();
+
+            var requests = new Request[]
+{
+    new Request
+    {
+        EquipmentId = 1,
+        RequestedBy = "student1",
+        RequestedAt = DateTime.UtcNow.AddDays(-7),
+        ApprovedAt = DateTime.UtcNow.AddDays(-6),
+        ReturnedAt = DateTime.UtcNow.AddDays(-4),
+        Status = RequestStatus.Returned,
+        Notes = "Used for math presentation"
+    },
+    new Request
+    {
+        EquipmentId = 2,
+        RequestedBy = "teacher1",
+        RequestedAt = DateTime.UtcNow.AddDays(-5),
+        ApprovedAt = DateTime.UtcNow.AddDays(-5),
+        Status = RequestStatus.Approved,
+        Notes = "Projector needed for class"
+    },
+    new Request
+    {
+        EquipmentId = 3,
+        RequestedBy = "student2",
+        RequestedAt = DateTime.UtcNow.AddDays(-2),
+        Status = RequestStatus.Pending,
+        Notes = "Requested for lab work"
+    },
+    new Request
+    {
+        EquipmentId = 4,
+        RequestedBy = "admin1",
+        RequestedAt = DateTime.UtcNow.AddDays(-10),
+        ApprovedAt = DateTime.UtcNow.AddDays(-9),
+        ReturnedAt = DateTime.UtcNow.AddDays(-8),
+        Status = RequestStatus.Returned,
+        Notes = "Camera used for school event"
+    }
+};
+
+            foreach (Request r in requests)
+            {
+                context.Requests.Add(r); // ❗ Увери се, че DbSet е наречен Requests
+            }
+            context.SaveChanges();
+
+
+
         }
     }
 }

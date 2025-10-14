@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamGPTInventory2025.Models;
+using TeamGPTInventory2025.Data;
 
 namespace TeamGPTInventory2025.Controllers
 {

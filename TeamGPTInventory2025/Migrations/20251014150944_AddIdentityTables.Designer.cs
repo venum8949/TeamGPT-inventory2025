@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TeamGPTInventory2025.Models;
 using TeamGPTInventory2025.Data;
-
 #nullable disable
 
 namespace TeamGPTInventory2025.Migrations
 {
     [DbContext(typeof(SchoolInventory))]
-    partial class SchoolInventoryModelSnapshot : ModelSnapshot
+    [Migration("20251014150944_AddIdentityTables")]
+    partial class AddIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -243,7 +246,7 @@ namespace TeamGPTInventory2025.Migrations
 
                     b.HasKey("EquipmentId");
 
-                    b.ToTable("Equipments");
+                    b.ToTable("Equipment", (string)null);
                 });
 
             modelBuilder.Entity("TeamGPTInventory2025.Models.Request", b =>
@@ -279,7 +282,7 @@ namespace TeamGPTInventory2025.Migrations
 
                     b.HasIndex("EquipmentId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Request", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

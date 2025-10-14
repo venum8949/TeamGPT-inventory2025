@@ -1,22 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-namespace TeamGPTInventory2025.Models
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using TeamGPTInventory2025.Models;
 
+namespace TeamGPTInventory2025.Data
 {
-    public class SchoolInventory : DbContext
+    public class SchoolInventory : IdentityDbContext<ApplicationUser>
     {
-        public SchoolInventory(DbContextOptions<SchoolInventory> options) : base(options)
+        public SchoolInventory(DbContextOptions<SchoolInventory> options)
+            : base(options)
         {
         }
 
+        // Use plural DbSet names to match usages across the codebase
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Request> Requests { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Equipment>().ToTable("Equipment");
-            modelBuilder.Entity<Request>().ToTable("Request");
-
+            base.OnModelCreating(builder);
+            // keep any custom configuration here
         }
-
     }
 }
-

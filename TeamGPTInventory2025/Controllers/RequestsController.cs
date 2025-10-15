@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
 
 namespace TeamGPTInventory2025.Controllers

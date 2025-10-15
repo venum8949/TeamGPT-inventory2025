@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamGPTInventory2025.Models;
-
+using TeamGPTInventory2025.Data;
 #nullable disable
 
 namespace TeamGPTInventory2025.Migrations

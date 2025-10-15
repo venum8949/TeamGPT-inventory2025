@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
+using System.Text.Json;
 
 namespace TeamGPTInventory2025.Controllers
 {
@@ -82,19 +83,54 @@ namespace TeamGPTInventory2025.Controllers
         }
 
         // PUT: api/Requests/5/return
+        // Accepts optional JSON body: { "condition": "Good" } or { "condition": 2 }
         [HttpPut("{id}/return")]
-        public async Task<IActionResult> ReturnRequest(int id)
+        public async Task<IActionResult> ReturnRequest(int id, [FromBody] JsonElement? body = null)
         {
-            var request = await _context.Requests.FindAsync(id);
+            var request = await _context.Requests
+                .Include(r => r.Equipment)
+                .FirstOrDefaultAsync(r => r.RequestId == id);
+
             if (request == null)
-                return NotFound();
+                return NotFound(new { message = "Няма намерен предмет" });
 
             request.Status = RequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
 
+            // Ensure equipment entity is available
+            var equipment = request.Equipment ?? await _context.Equipments.FindAsync(request.EquipmentId);
+            if (equipment != null)
+            {
+                // Update equipment status back to Available
+                equipment.Status = EquipmentStatus.Available;
+
+                // If caller provided a 'condition' in the JSON body, try to parse and update
+                if (body.HasValue && body.Value.ValueKind == JsonValueKind.Object &&
+                    body.Value.TryGetProperty("condition", out var condProp))
+                {
+                    // Try parse as string first
+                    if (condProp.ValueKind == JsonValueKind.String)
+                    {
+                        var condStr = condProp.GetString();
+                        if (!string.IsNullOrWhiteSpace(condStr) && Enum.TryParse<Condition>(condStr, true, out var parsed))
+                        {
+                            equipment.Condition = parsed;
+                        }
+                    }
+                    else if (condProp.ValueKind == JsonValueKind.Number)
+                    {
+                        if (condProp.TryGetInt32(out var condInt) && Enum.IsDefined(typeof(Condition), condInt))
+                        {
+                            equipment.Condition = (Condition)condInt;
+                        }
+                    }
+                }
+            }
+
             await _context.SaveChangesAsync();
             return Ok();
         }
+
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
+using System.Text.Json;
 
 namespace TeamGPTInventory2025.Controllers
 {
@@ -25,6 +26,25 @@ namespace TeamGPTInventory2025.Controllers
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
             return await _context.Requests.Include(r => r.Equipment).ToListAsync();
+        }
+
+        // GET: api/Requests/my  - returns requests for the authenticated user
+        [HttpGet("my")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Request>>> GetMyRequests()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var requests = await _context.Requests
+                .Include(r => r.Equipment)
+                .Where(r => r.RequestedBy == userId)
+                .ToListAsync();
+
+            return Ok(requests);
         }
 
         // GET: api/Requests/5

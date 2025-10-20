@@ -1,9 +1,12 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using TeamGPTInventory2025.Authentication;
 using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
 
@@ -12,21 +15,50 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Ensure enums are serialized/deserialized as strings for both Controllers and Minimal APIs
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-// Minimal APIs (MapGroup/MapGet etc.) JSON options
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TeamGPTInventory2025 API", Version = "v1" });
+
+    var bearerScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "token",
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", bearerScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { bearerScheme, Array.Empty<string>() }
+    });
+});
+
 builder.Services.AddDbContext<SchoolInventory>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -40,29 +72,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<SchoolInventory>()
     .AddDefaultTokenProviders();
 
-// JWT Authentication
-var jwtSection = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key") ?? "ChangeThis_UseASecureStrongKey_InProduction!");
+
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = "SimplePassword";
+    options.DefaultChallengeScheme = "SimplePassword";
 })
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = jwtSection.GetValue<string>("Issuer"),
-        ValidateAudience = true,
-        ValidAudience = jwtSection.GetValue<string>("Audience"),
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateLifetime = true,
-    };
-});
+.AddScheme<AuthenticationSchemeOptions, SimplePasswordAuthHandler>("SimplePassword", options => { });
 
 var app = builder.Build();
 
@@ -72,13 +88,13 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<SchoolInventory>();
-        // Apply any pending migrations at startup
+        
         context.Database.Migrate();
 
-        // Existing seeding
+        
         DbInit.Initialize(context);
 
-        // Seed roles + default admin
+        
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -115,7 +131,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -125,7 +141,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // required
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

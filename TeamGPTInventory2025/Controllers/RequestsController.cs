@@ -83,14 +83,25 @@ namespace TeamGPTInventory2025.Controllers
 
         // PUT: api/Requests/5/return
         [HttpPut("{id}/return")]
-        public async Task<IActionResult> ReturnRequest(int id)
+        public async Task<IActionResult> ReturnRequest(int id, [FromQuery] Condition? condition = null)
         {
-            var request = await _context.Requests.FindAsync(id);
+            var request = await _context.Requests
+                                        .Include(r => r.Equipment)
+                                        .FirstOrDefaultAsync(r => r.RequestId == id);
             if (request == null)
-                return NotFound();
+                return NotFound(new { message = "Няма намерен предмет" });
 
             request.Status = RequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
+
+            // Update equipment status to Available
+            request.Equipment.Status = EquipmentStatus.Available;
+
+            // Update equipment condition if provided
+            if (condition.HasValue)
+            {
+                request.Equipment.Condition = condition.Value;
+            }
 
             await _context.SaveChangesAsync();
             return Ok();

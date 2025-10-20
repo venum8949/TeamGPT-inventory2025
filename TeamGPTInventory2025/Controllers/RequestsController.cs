@@ -119,7 +119,7 @@ namespace TeamGPTInventory2025.Controllers
                 .FirstOrDefaultAsync(r => r.RequestId == id);
 
             if (request == null)
-                return NotFound(new { message = "Няма намерен предмет" });
+                return NotFound(new { message = "Request not found" });
 
             request.Status = RequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
@@ -134,7 +134,7 @@ namespace TeamGPTInventory2025.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(request);
         }
 
 

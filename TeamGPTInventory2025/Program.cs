@@ -80,6 +80,17 @@ builder.Services.AddAuthentication(options =>
 })
 .AddScheme<AuthenticationSchemeOptions, SimplePasswordAuthHandler>("SimplePassword", options => { });
 
+// Configure CORS to allow any origin to access the APIs
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -132,6 +143,10 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+
+
+// Enable CORS using the configured policy
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {

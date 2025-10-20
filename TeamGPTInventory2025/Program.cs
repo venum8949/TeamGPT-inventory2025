@@ -1,12 +1,10 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TeamGPTInventory2025.Authentication;
 using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
 
@@ -15,18 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Ensure enums are serialized/deserialized as strings for both Controllers and Minimal APIs
-builder.Services.AddControllers(options =>
-{
-    var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
-})
+builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
+// Minimal APIs (MapGroup/MapGet etc.) JSON options
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -72,13 +65,29 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<SchoolInventory>()
     .AddDefaultTokenProviders();
 
-
+// JWT Authentication
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key") ?? "ChangeThis_UseASecureStrongKey_InProduction!");
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = "SimplePassword";
-    options.DefaultChallengeScheme = "SimplePassword";
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddScheme<AuthenticationSchemeOptions, SimplePasswordAuthHandler>("SimplePassword", options => { });
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = jwtSection.GetValue<string>("Issuer"),
+        ValidateAudience = true,
+        ValidAudience = jwtSection.GetValue<string>("Audience"),
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateLifetime = true,
+    };
+});
 
 // Configure CORS to allow any origin to access the APIs
 builder.Services.AddCors(options =>
@@ -99,13 +108,13 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<SchoolInventory>();
-        
+        // Apply any pending migrations at startup
         context.Database.Migrate();
 
-        
+        // Existing seeding
         DbInit.Initialize(context);
 
-        
+        // Seed roles + default admin
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -142,7 +151,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
+// Configure the HTTP request pipeline.
 
 
 // Enable CORS using the configured policy
@@ -156,7 +165,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
+app.UseAuthentication(); // required
 app.UseAuthorization();
 
 app.MapControllers();

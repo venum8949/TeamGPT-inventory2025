@@ -108,7 +108,7 @@ namespace TeamGPTInventory2025.Controllers
             return Ok();
         }
 
-
+        // PUT: api/Requests/5/reject
         [HttpPut("{id}/reject")]
         public async Task<IActionResult> RejectRequest(int id)
         {
@@ -121,7 +121,7 @@ namespace TeamGPTInventory2025.Controllers
             return Ok();
         }
 
-        
+        // PUT: api/Requests/5/return
         [HttpPut("{id}/return")]
         public async Task<IActionResult> ReturnRequest(int id)
         {
@@ -132,19 +132,11 @@ namespace TeamGPTInventory2025.Controllers
             request.Status = RequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
 
-            
-            var equipment = await _context.Equipments.FindAsync(request.EquipmentId);
-            if (equipment != null)
-            {
-                equipment.Status = EquipmentStatus.Available;
-                _context.Entry(equipment).State = EntityState.Modified;
-            }
-
             await _context.SaveChangesAsync();
             return Ok();
         }
 
-        
+        // DELETE: api/Requests/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequest(int id)
         {

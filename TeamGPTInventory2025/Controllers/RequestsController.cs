@@ -42,6 +42,7 @@ namespace TeamGPTInventory2025.Controllers
             var requests = await _context.Requests
                 .Include(r => r.Equipment)
                 .Where(r => r.RequestedBy == userId)
+                .AsNoTracking()
                 .ToListAsync();
 
             return Ok(requests);

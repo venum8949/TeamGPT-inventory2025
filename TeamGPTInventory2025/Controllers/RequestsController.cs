@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using TeamGPTInventory2025.Data;
 using TeamGPTInventory2025.Models;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TeamGPTInventory2025.Controllers
 {

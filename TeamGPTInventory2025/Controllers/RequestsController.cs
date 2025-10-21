@@ -14,6 +14,7 @@ namespace TeamGPTInventory2025.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class RequestsController : ControllerBase
     {
         private readonly SchoolInventory _context;
@@ -32,7 +33,6 @@ namespace TeamGPTInventory2025.Controllers
 
         // GET: api/Requests/my  - returns requests for the authenticated user
         [HttpGet("my")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<Request>>> GetMyRequests()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,19 +65,41 @@ namespace TeamGPTInventory2025.Controllers
 
         // POST: api/Requests
         [HttpPost]
-        public async Task<ActionResult<Request>> PostRequest(Request request)
+        public async Task<ActionResult<Request>> PostRequest([FromBody] RequestDto dto)
         {
-            request.RequestedAt = DateTime.UtcNow;
-            request.Status = RequestStatus.Pending;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            // Validate equipment exists
+            var equipment = await _context.Equipments.FindAsync(dto.EquipmentId);
+            if (equipment == null)
+            {
+                return BadRequest("Equipment not found.");
+            }
+
+            var request = new Request
+            {
+                EquipmentId = dto.EquipmentId,
+                Notes = dto.Note,
+                RequestedBy = userId,
+                RequestedAt = DateTime.UtcNow,
+                Status = RequestStatus.Pending
+            };
 
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
 
+            // Load navigation so the Created response includes Equipment
+            await _context.Entry(request).Reference(r => r.Equipment).LoadAsync();
+
             return CreatedAtAction(nameof(GetRequest), new { id = request.RequestId }, request);
         }
 
-        
         [HttpPut("{id}/approve")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ApproveRequest(int id)
         {
             
@@ -121,6 +143,7 @@ namespace TeamGPTInventory2025.Controllers
 
         // PUT: api/Requests/5/reject
         [HttpPut("{id}/reject")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RejectRequest(int id)
         {
             var request = await _context.Requests.FindAsync(id);

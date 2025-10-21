@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TeamGPTInventory2025.Models;
 using TeamGPTInventory2025.Data;
+using TeamGPTInventory2025.Models;
 
 namespace TeamGPTInventory2025.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class ReportController : ControllerBase
     {
         private readonly SchoolInventory _context;

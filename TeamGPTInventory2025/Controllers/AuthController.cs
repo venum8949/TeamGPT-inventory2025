@@ -22,7 +22,7 @@ namespace TeamGPTInventory2025.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest model)
         {
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -33,11 +33,11 @@ namespace TeamGPTInventory2025.Controllers
 
             // Assign "User" role by default
             await _userManager.AddToRoleAsync(user, "User");
-            return Ok(new { message = "User created" });
+            return Ok(new RegisterResponse("User created"));
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest model)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) return Unauthorized();
@@ -47,7 +47,7 @@ namespace TeamGPTInventory2025.Controllers
             var roles = await _userManager.GetRolesAsync(user);
 
             var jwtSection = _config.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key")));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key")!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -73,12 +73,7 @@ namespace TeamGPTInventory2025.Controllers
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return Ok(new
-            {
-                access_token = tokenString,
-                expires = expires,
-                roles = roles
-            });
+            return Ok(new LoginResponse(tokenString, expires, roles));
         }
     }
 

@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TeamGPTInventory2025.Models;
 using TeamGPTInventory2025.Data;
+using TeamGPTInventory2025.Models;
 
 namespace TeamGPTInventory2025.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class ReportController : ControllerBase
     {
         private readonly SchoolInventory _context;
@@ -38,6 +40,9 @@ namespace TeamGPTInventory2025.Controllers
             var approvedRequests = requests.Count(r => r.Status == RequestStatus.Approved);
             var rejectedRequests = requests.Count(r => r.Status == RequestStatus.Rejected);
             var pendingRequests = requests.Count(r => r.Status == RequestStatus.Pending);
+
+            var availableEquipment = equipments.Count(r => r.Status == EquipmentStatus.Available);
+            var underRepairEquipment = equipments.Count(r => r.Status == EquipmentStatus.UnderRepair);
 
             // Group by equipment type
             var usageByType = equipments
@@ -114,6 +119,8 @@ namespace TeamGPTInventory2025.Controllers
                 ApprovedRequests = approvedRequests,
                 RejectedRequests = rejectedRequests,
                 PendingRequests = pendingRequests,
+                AvailableEquipment = availableEquipment,
+                UnderRepairEquipment = underRepairEquipment,
                 UsageByType = usageByType,
                 MostBorrowedItems = mostBorrowedItems,
                 ActiveUsers = activeUsers,

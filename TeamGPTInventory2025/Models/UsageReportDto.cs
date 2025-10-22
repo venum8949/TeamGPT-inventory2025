@@ -18,6 +18,8 @@ namespace TeamGPTInventory2025.Models
         // optional
         public double? AverageBorrowDays { get; set; }
         public int OverdueCount { get; set; }
+        public int AvailableEquipment { get; internal set; }
+        public int UnderRepairEquipment { get; internal set; }
     }
 
     public class UsageByTypeDto

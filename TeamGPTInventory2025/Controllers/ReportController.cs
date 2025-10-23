@@ -131,12 +131,17 @@ namespace TeamGPTInventory2025.Controllers
             return Ok(dto);
         }
 
-        // 📜 History Report – заявки подредени по дата
+        // 📜 History Report – заявки подредени по дата, с филтър по период
         [HttpGet("history")]
-        public async Task<ActionResult<IEnumerable<Report>>> GetHistoryReport()
+        public async Task<ActionResult<IEnumerable<Report>>> GetHistoryReport(DateTime? from = null, DateTime? to = null)
         {
+            var toDate = to ?? DateTime.UtcNow;
+            var fromDate = from ?? toDate.AddDays(-7);
+
             var report = await _context.Requests
+                .AsNoTracking()
                 .Include(r => r.Equipment)
+                .Where(r => r.RequestedAt >= fromDate && r.RequestedAt <= toDate)
                 .OrderByDescending(r => r.RequestedAt)
                 .Select(r => new Report
                 {
@@ -152,6 +157,7 @@ namespace TeamGPTInventory2025.Controllers
 
             return Ok(report);
         }
+
 
         // 📤 Export Report – CSV текст за изтегляне
         [HttpGet("export")]

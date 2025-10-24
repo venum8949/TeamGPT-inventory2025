@@ -82,6 +82,7 @@ namespace TeamGPTInventory2025.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Equipment>> PostEquipment(Equipment equipment)
         {
+            equipment.EquipmentId = 0;
             _context.Equipments.Add(equipment);
             await _context.SaveChangesAsync();
 

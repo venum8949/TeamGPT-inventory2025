@@ -1,14 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TeamGPTInventory2025.Models;
 
 namespace TeamGPTInventory2025.Models
 {
     public class Equipment
     {
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EquipmentId { get; set; }
 
         [Required]
@@ -25,9 +26,9 @@ namespace TeamGPTInventory2025.Models
         public EquipmentStatus Status { get; set; }
 
         // 3️⃣ Location as free text (e.g., "Room 204", "Library")
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
-        public string PhotoUrl { get; set; }
+        public string? PhotoUrl { get; set; }
 
         // Navigation property
         // public ICollection<Request> Requests { get; set; }
@@ -50,5 +51,6 @@ namespace TeamGPTInventory2025.Models
         Available = 1,
         Unavailable = 2,
         UnderRepair = 3,
+        Retired = 4,
     }
 }

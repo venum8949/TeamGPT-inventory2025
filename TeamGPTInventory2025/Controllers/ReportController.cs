@@ -40,6 +40,7 @@ namespace TeamGPTInventory2025.Controllers
             var approvedRequests = requests.Count(r => r.Status == RequestStatus.Approved);
             var rejectedRequests = requests.Count(r => r.Status == RequestStatus.Rejected);
             var pendingRequests = requests.Count(r => r.Status == RequestStatus.Pending);
+            var returnedRequests = requests.Count(r => r.Status == RequestStatus.Returned);
 
             var availableEquipment = equipments.Count(r => r.Status == EquipmentStatus.Available);
             var underRepairEquipment = equipments.Count(r => r.Status == EquipmentStatus.UnderRepair);
@@ -119,6 +120,7 @@ namespace TeamGPTInventory2025.Controllers
                 ApprovedRequests = approvedRequests,
                 RejectedRequests = rejectedRequests,
                 PendingRequests = pendingRequests,
+                ReturnedRequests = returnedRequests,
                 AvailableEquipment = availableEquipment,
                 UnderRepairEquipment = underRepairEquipment,
                 UsageByType = usageByType,

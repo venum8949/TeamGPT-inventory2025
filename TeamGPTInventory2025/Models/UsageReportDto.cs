@@ -20,6 +20,7 @@ namespace TeamGPTInventory2025.Models
         public int OverdueCount { get; set; }
         public int AvailableEquipment { get; internal set; }
         public int UnderRepairEquipment { get; internal set; }
+        public int ReturnedRequests { get; internal set; }
     }
 
     public class UsageByTypeDto

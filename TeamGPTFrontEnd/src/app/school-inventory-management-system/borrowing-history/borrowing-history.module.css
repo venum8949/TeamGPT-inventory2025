@@ -1,0 +1,34 @@
+.column-layout {
+  display: flex;
+  flex-direction: column;
+}
+.borrowing-history-container {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 0;
+  height: 100%;
+}
+.history-layout {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 32px;
+  position: relative;
+  padding: 48px 32px;
+  min-width: 50px;
+  min-height: 50px;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+.content {
+  height: max-content;
+  min-width: min-content;
+}
+.borrowing-history-grid {
+  --ig-size: var(--ig-size-medium);
+  min-width: 600px;
+  min-height: 300px;
+  flex-grow: 1;
+  flex-basis: 0;
+}

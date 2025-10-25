@@ -1,0 +1,79 @@
+[
+  {
+    "Message": "Data source model for data source with id '08de13db-b9c4-487e-8d6c-5cc4cb565c1f' not found!",
+    "Level": "Error",
+    "Reason": "NotFound",
+    "Category": "Data",
+    "Context": {
+      "ComponentId": null,
+      "ViewId": null
+    },
+    "UTCTimestamp": "2025-10-25T15:33:15.6003698Z"
+  },
+  {
+    "Message": "Component '' with id '53aa75b0-a1d7-48ba-a6f5-2358157596e7' has a method action targeting non-existing component with id ''. Interaction not generated! Current view id 'f990d42a-9fcb-48c0-8cb6-bb547f4226f7'",
+    "Level": "Error",
+    "Reason": "NotFound",
+    "Category": "Action",
+    "Context": {
+      "ComponentId": "53aa75b0-a1d7-48ba-a6f5-2358157596e7",
+      "ViewId": "f990d42a-9fcb-48c0-8cb6-bb547f4226f7"
+    },
+    "UTCTimestamp": "2025-10-25T15:33:15.6007265Z"
+  },
+  {
+    "Message": "Component '' with id '574b1ecf-0d12-43da-a4a9-891c819879df' has a method action targeting non-existing component with id ''. Interaction not generated! Current view id '5e45a770-c292-4321-90cc-b991c7d5eaf3'",
+    "Level": "Error",
+    "Reason": "NotFound",
+    "Category": "Action",
+    "Context": {
+      "ComponentId": "574b1ecf-0d12-43da-a4a9-891c819879df",
+      "ViewId": "5e45a770-c292-4321-90cc-b991c7d5eaf3"
+    },
+    "UTCTimestamp": "2025-10-25T15:33:15.6041123Z"
+  },
+  {
+    "Message": "Component '' with id '0f00909a-deb3-4836-b4e5-aec1423d72f2' has a method action targeting non-existing component with id ''. Interaction not generated! Current view id '64f7d62a-dbf0-4b86-a036-335f8279513b'",
+    "Level": "Error",
+    "Reason": "NotFound",
+    "Category": "Action",
+    "Context": {
+      "ComponentId": "0f00909a-deb3-4836-b4e5-aec1423d72f2",
+      "ViewId": "64f7d62a-dbf0-4b86-a036-335f8279513b"
+    },
+    "UTCTimestamp": "2025-10-25T15:33:15.6187399Z"
+  },
+  {
+    "Message": "Component '' with id '29be0976-0fdf-41cb-9d7c-34db2048bfcd' has property 'defaultValue' of type 'number' which is not in the correct format.",
+    "Level": "Warning",
+    "Reason": "TypeError",
+    "Category": "General",
+    "Context": {
+      "ComponentId": "29be0976-0fdf-41cb-9d7c-34db2048bfcd",
+      "ViewId": "64f7d62a-dbf0-4b86-a036-335f8279513b"
+    },
+    "UTCTimestamp": "2025-10-25T15:33:15.6198451Z"
+  },
+  {
+    "Message": "There is no default route set. Setting first child route with name 'Login View' and id 'f990d42a-9fcb-48c0-8cb6-bb547f4226f7' as a default!",
+    "Level": "Warning",
+    "Reason": "NotFound",
+    "Category": "Routing",
+    "Context": {
+      "ComponentId": null,
+      "ViewId": null
+    },
+    "UTCTimestamp": "2025-10-25T15:33:16.009804Z"
+  },
+  {
+    "Message": "There is no default route set. Setting first child route with name 'Dashboard' and id '6a9a7931-784d-47f7-a28d-0bc2568ee0e5' as a default!",
+    "Level": "Warning",
+    "Reason": "NotFound",
+    "Category": "Routing",
+    "Context": {
+      "ComponentId": null,
+      "ViewId": null
+    },
+    "UTCTimestamp": "2025-10-25T15:33:16.0098646Z"
+  }
+]

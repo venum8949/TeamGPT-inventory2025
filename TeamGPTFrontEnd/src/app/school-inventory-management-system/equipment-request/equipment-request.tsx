@@ -24,7 +24,20 @@ export default function EquipmentRequest() {
   async function submitRequestDto(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const value = formDataToObject<RequestDto>(e.target as HTMLFormElement);
-    await postRequest(value);
+   
+    try {
+      const response = await postRequest(value);
+      console.log('Отговор от backend:', response);
+
+      if (response) {
+        snackbarsuccess.current?.show(); // показва snackbar за успех
+      } else {
+        snackbarerror.current?.show(); // показва snackbar за грешка
+      }
+    } catch (error) {
+      console.error('Грешка при заявката:', error);
+      snackbarerror.current?.show(); // показва snackbar при изключение
+    }
   }
 
   return (
@@ -40,7 +53,7 @@ export default function EquipmentRequest() {
           <form onSubmit={submitRequestDto} ref={form} className={classes("column-layout form")}>
             <div className={classes("column-layout form_fields")}>
               <IgrCombo outlined={true} data={gear} label="Equipment" defaultValue={initialRequests?.equipmentId ? [initialRequests?.equipmentId] : []} valueKey="equipmentId" displayKey="name" singleSelect={true} name="equipmentId" className={classes("user-input")}></IgrCombo>
-              <IgrTextarea label="Comment" defaultValue={initialRequests?.note ?? ""} outlined={true} name="note" className={classes("user-input")}></IgrTextarea>
+              <IgrTextarea label="Comment" required={true} defaultValue={initialRequests?.note ?? ""} outlined={true} name="note" className={classes("user-input")}></IgrTextarea>
             </div>
             <div className={classes("row-layout actions")}>
               <IgrButton variant="outlined" type="reset" className={classes("button")}>

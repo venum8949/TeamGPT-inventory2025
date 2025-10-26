@@ -131,3 +131,48 @@ export async function postEquipment(data?: Equipment): Promise<Equipment | undef
   };
   return await FetchApi.fetchApiResponse<Equipment | undefined>(`${API_ENDPOINT}/api/Equipments`, undefined, 'POST', body, headers);
 }
+
+export async function approveRequest(id: number): Promise<void> {
+  const headers = {
+    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')!)?.accessToken
+  };
+  await FetchApi.fetchApiResponse<void>(
+    `https://localhost:7122/api/requests/${id}/approve`,
+    undefined,
+    'PUT',
+    undefined,
+    headers,
+    false,
+    true
+  );
+}
+
+export async function returnRequest(id: number): Promise<void> {
+  const headers = {
+    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')!)?.accessToken
+  };
+  await FetchApi.fetchApiResponse<void>(
+    `https://localhost:7122/api/requests/${id}/return`,
+    undefined,
+    'PUT',
+    undefined,
+    headers,
+    false,
+    true
+  );
+}
+
+export async function rejectRequest(id: number): Promise<void> {
+  const headers = {
+    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')!)?.accessToken
+  };
+  await FetchApi.fetchApiResponse<void>(
+    `https://localhost:7122/api/requests/${id}/reject`,
+    undefined,
+    'PUT',
+    undefined,
+    headers,
+    false,
+    true
+  );
+}

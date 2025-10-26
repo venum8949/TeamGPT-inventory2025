@@ -13,7 +13,7 @@ export default function EquipmentRequest() {
   const classes = createClassTransformer(styles);
   let initialRequests: RequestDto | undefined;
   const routeParams = useParams();
-  const _equipmentID = routeParams.EquipmentID != null
+  const equipmentID = routeParams.EquipmentID != null
     ? Number(routeParams.EquipmentID)
     : undefined;
   const form = useRef<HTMLFormElement>(null);
@@ -52,7 +52,7 @@ export default function EquipmentRequest() {
           </p>
           <form onSubmit={submitRequestDto} ref={form} className={classes("column-layout form")}>
             <div className={classes("column-layout form_fields")}>
-              <IgrCombo outlined={true} data={gear} label="Equipment" defaultValue={initialRequests?.equipmentId ? [initialRequests?.equipmentId] : []} valueKey="equipmentId" displayKey="name" singleSelect={true} name="equipmentId" className={classes("user-input")}></IgrCombo>
+              <IgrCombo outlined={true} data={gear} label="Equipment" defaultValue={equipmentID ? [equipmentID] : []} valueKey="equipmentId" displayKey="name" singleSelect={true} name="equipmentId" className={classes("user-input")}></IgrCombo>
               <IgrTextarea label="Comment" required={true} defaultValue={initialRequests?.note ?? ""} outlined={true} name="note" className={classes("user-input")}></IgrTextarea>
             </div>
             <div className={classes("row-layout actions")}>

@@ -55,11 +55,24 @@ export default function SchoolInventoryManagementSystem() {
         </IgrNavbar>
         <div className={classes("row-layout main-horizontal-group")}>
           <IgrNavDrawer open={true} position="relative" ref={mainNavDrawer} className={classes("main-nav-drawer")}>
+            {globalState.user?.roles?.includes("Admin") && <>
             <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/dashboard`)}>
               <IgrNavDrawerItem>
                 <div slot="content">Dashboard</div>
               </IgrNavDrawerItem>
             </div>
+            <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/admin-equipment-requests`)}>
+              <IgrNavDrawerItem>
+                <div slot="content">Admin Requests</div>
+              </IgrNavDrawerItem>
+            </div>
+            <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/admin-inventory-catalog`)}>
+              <IgrNavDrawerItem>
+                <div slot="content">Admin Inventory Catalog</div>
+              </IgrNavDrawerItem>
+            </div>
+            </>}
+            {globalState.user?.roles?.includes("User") && <>
             <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/inventory-catalog`)}>
               <IgrNavDrawerItem>
                 <div slot="content">Inventory Catalog</div>
@@ -75,16 +88,7 @@ export default function SchoolInventoryManagementSystem() {
                 <div slot="content">Borrowing History</div>
               </IgrNavDrawerItem>
             </div>
-            <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/admin-equipment-requests`)}>
-              <IgrNavDrawerItem>
-                <div slot="content">Admin Requests</div>
-              </IgrNavDrawerItem>
-            </div>
-            <div style={{ display: 'contents' }} onClick={() => navigate(`/school-inventory-management-system/admin-inventory-catalog`)}>
-              <IgrNavDrawerItem>
-                <div slot="content">Admin Inventory Catalog</div>
-              </IgrNavDrawerItem>
-            </div>
+            </>}
           </IgrNavDrawer>
           <div className={classes("main-page-container")}>
             <Outlet></Outlet>

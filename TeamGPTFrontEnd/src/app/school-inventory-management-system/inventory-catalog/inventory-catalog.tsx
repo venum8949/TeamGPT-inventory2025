@@ -15,7 +15,7 @@ export default function InventoryCatalog() {
   const columnBodyTemplate = (ctx: IgrCellTemplateContext) => {
     return (
       <>
-        <IgrButton type="button" onClick={() => navigate(`/school-inventory-management-system/equipment-request`)} className={classes("button")}>
+        <IgrButton type="button" onClick={() => navigate(`/school-inventory-management-system/equipment-request/${ctx.cell.row.data.equipmentId}`)} className={classes("button")}>
           <span>Request</span>
           <IgrRipple></IgrRipple>
         </IgrButton>

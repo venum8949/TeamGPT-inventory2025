@@ -7,7 +7,8 @@ export class FetchApi {
     method: string = "GET",
     body?: string,
     headers?: Record<string, string>,
-    includeCredentials?: boolean
+    includeCredentials?: boolean,
+    skipjsonParse?: boolean
   ): Promise<T> {
     const options: {
       method: string;
@@ -32,6 +33,10 @@ export class FetchApi {
 
       if (!response.ok) {
         console.error(response.statusText);
+        return Promise.resolve(result as T);
+      }
+
+      if (skipjsonParse) {
         return Promise.resolve(result as T);
       }
 

@@ -43,7 +43,7 @@ export default function LoginView() {
             </h6>
             <div className={classes("column-layout form_fields")}>
               <IgrInput label="email" outlined={true} name="email"></IgrInput>
-              <IgrInput label="password" outlined={true} name="password"></IgrInput>
+              <IgrInput label="password" outlined={true} name="password" type='password'></IgrInput>
             </div>
             <div className={classes("row-layout actions")}>
               <IgrButton type="submit" className={classes("button")}>

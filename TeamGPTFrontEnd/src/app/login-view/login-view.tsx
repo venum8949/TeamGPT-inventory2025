@@ -15,7 +15,7 @@ export default function LoginView() {
   const form = useRef<HTMLFormElement>(null);
   const snackbar = useRef<IgrSnackbar>(null);
   const { globalState, setGlobalState } = useGlobalContext();
-  
+
   async function submitLoginRequest(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const value = formDataToObject<LoginRequest>(e.target as HTMLFormElement);
@@ -67,7 +67,7 @@ export default function LoginView() {
             </IgrSnackbar>
           </form>
         </div>
-        <img src="/src/assets/ChatGPT%20Image%20Oct%2022%2C%202025%2C%2004_23_43%20PM.png" alt="" className={classes("login-image")} />
+        <img src="/src/assets/TeamGPT.png" alt="" className={classes("login-image")} />
       </div>
     </>
   );

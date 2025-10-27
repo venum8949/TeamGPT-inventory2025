@@ -60,7 +60,7 @@ export default function RegisterView() {
           </form>
         </div>
         <div className={classes("column-layout group_1")}>
-          <img src="/src/assets/ChatGPT%20Image%20Oct%2022%2C%202025%2C%2004_23_43%20PM.png" alt="" className={classes("login-image")} />
+          <img src="/src/assets/TeamGPT.png" alt="" className={classes("login-image")} />
         </div>
       </div>
     </>

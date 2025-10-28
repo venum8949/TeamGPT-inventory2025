@@ -86,8 +86,12 @@ export default function AdminEquipmentRequests() {
               </IgrGridToolbarTitle>
             </IgrGridToolbar>
             <IgrColumn field="requestId" dataType="number" header="Request ID" groupable={true} sortable={true} selectable={false}></IgrColumn>
-            <IgrColumn field="equipmentId" dataType="number" header="Equipment ID" groupable={true} sortable={true} selectable={false}></IgrColumn>
+            <IgrColumn field="status" dataType="string" header="Status" groupable={true} sortable={true} selectable={false}></IgrColumn>
+            <IgrColumn field="requestedAt" dataType="date" header="Requested At" groupable={true} sortable={true} selectable={false}></IgrColumn>
+            <IgrColumn field="approvedAt" dataType="date" header="Approved At" groupable={true} sortable={true} selectable={false}></IgrColumn>
+            <IgrColumn field="returnedAt" dataType="date" header="Returned At" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="equipment.name" dataType="string" header="Name" groupable={true} sortable={true} selectable={false}></IgrColumn>
+            <IgrColumn field="equipmentId" dataType="number" header="Equipment ID" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="equipment.type" dataType="string" header="Type" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="equipment.serialNumber" dataType="string" header="Serial Number" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="equipment.condition" dataType="string" header="Condition" groupable={true} sortable={true} selectable={false}></IgrColumn>
@@ -95,10 +99,6 @@ export default function AdminEquipmentRequests() {
             <IgrColumn field="equipment.location" dataType="string" header="Location" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="equipment.photoUrl" dataType="string" header="Image" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="requestedBy" dataType="string" header="Requested By" groupable={true} sortable={true} selectable={false}></IgrColumn>
-            <IgrColumn field="requestedAt" dataType="date" header="Requested At" groupable={true} sortable={true} selectable={false}></IgrColumn>
-            <IgrColumn field="approvedAt" dataType="date" header="Approved At" groupable={true} sortable={true} selectable={false}></IgrColumn>
-            <IgrColumn field="returnedAt" dataType="date" header="Returned At" groupable={true} sortable={true} selectable={false}></IgrColumn>
-            <IgrColumn field="status" dataType="string" header="Return" groupable={true} sortable={true} selectable={false}></IgrColumn>
             <IgrColumn field="notes" dataType="string" header="Comment" groupable={true} sortable={true} selectable={false}></IgrColumn>
           </IgrGrid>
           <div className={classes("row-layout group")}>
